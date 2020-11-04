@@ -1,33 +1,52 @@
-{% extends 'base.html.twig' %}
+{% extends 'content.html.twig' %}
 
-{% block title %}Administrateur index{% endblock %}
+{% block title %}Administrateur
+{% endblock %}
 
-{% block body %}
-    <h1>Administrateur index</h1>
+{% block content_header %}
+	<ul class="menu-nav">
+		<li class="menu-item menu-item-active" aria-haspopup="true">
+			<a href="{{ path('administrateur_index') }}" class="menu-link">
+				<span class="menu-text">Accueil</span>
+			</a>
+		</li>
+		<li class="menu-item" aria-haspopup="true">
+			<a href="#" class="menu-link">
+				<span class="menu-text">Publications</span>
+			</a>
+		</li>
+		<li class="menu-item" aria-haspopup="true">
+			<a href="{{ path('user_index') }}" class="menu-link">
+				<span class="menu-text">Utilisateurs</span>
+			</a>
+		</li>
+	</ul>
+{% endblock %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for administrateur in administrateurs %}
-            <tr>
-                <td>{{ administrateur.id }}</td>
-                <td>
-                    <a href="{{ path('administrateur_show', {'id': administrateur.id}) }}">show</a>
-                    <a href="{{ path('administrateur_edit', {'id': administrateur.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="2">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+{% block content_subheader %}
+	<!--begin::Page Title-->
+	<h5 class="text-dark font-weight-bold my-1 mr-5">Accueil</h5>
+	<!--end::Page Title-->
+	<!--begin::Breadcrumb-->
+	<ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
+		<li class="breadcrumb-item text-muted">
+			<span class="text-muted">Application</span>
+		</li>
+		<li class="breadcrumb-item text-muted">
+			<a href="#" class="text-muted">Accueil</a>
+		</li>
+	</ul>
+	<!--end::Breadcrumb-->
+{% endblock %}
 
-    <a href="{{ path('administrateur_new') }}">Create new</a>
+{% block content_body %}
+	<!--begin::Content-->
+	<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+		<div class="form-group mx-20">
+			<div class="alert alert-custom alert-default border border-danger" role="alert">
+				<div class="alert-text text-center h2">Administrateur index.</div>
+			</div>
+		</div>
+	</div>
+	<!--end::Content-->
 {% endblock %}

@@ -1,0 +1,208 @@
+{% extends 'content.html.twig' %}
+
+{% block title %}Utilisateurs
+{% endblock %}
+
+{% block content_header %}
+	<ul class="menu-nav">
+		<li class="menu-item" aria-haspopup="true">
+			<a href="{{ path('moderateur_index') }}" class="menu-link">
+				<span class="menu-text">Accueil</span>
+			</a>
+		</li>
+		<li class="menu-item" aria-haspopup="true">
+			<a href="#" class="menu-link">
+				<span class="menu-text">Publications</span>
+			</a>
+		</li>
+		<li class="menu-item menu-item-active" aria-haspopup="true">
+			<a href="{{ path('user_index') }}" class="menu-link">
+				<span class="menu-text">Utilisateurs</span>
+			</a>
+		</li>
+	</ul>
+{% endblock %}
+
+{% block content_subheader %}
+	<!--begin::Page Title-->
+	<h5 class="text-dark font-weight-bold my-1 mr-5">Utilisateurs</h5>
+	<!--end::Page Title-->
+	<!--begin::Breadcrumb-->
+	<ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
+		<li class="breadcrumb-item text-muted">
+			<span class="text-muted">Application</span>
+		</li>
+		<li class="breadcrumb-item text-muted">
+			<a href="#" class="text-muted">Les utilisateurs</a>
+		</li>
+	</ul>
+	<!--end::Breadcrumb-->
+{% endblock %}
+
+{% block content_subheader_right %}
+	<div class="d-flex align-items-center flex-wrap">
+		<div class="dropdown dropdown-inline" data-toggle="tooltip" title="Ajoute un utilisateur" data-placement="top">
+			<a href="{{ path('user_new') }}" class="btn btn-light-primary font-weight-bolder px-5 mr-3 my-1">
+				<span
+					class="svg-icon">
+					<!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/keen/releases/2020-10-07-041015/theme/demo6/dist/../src/media/svg/icons/Communication/Add-user.svg-->
+					<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewbox="0 0 24 24" version="1.1">
+						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+							<polygon points="0 0 24 0 24 24 0 24"/>
+							<path d="M18,8 L16,8 C15.4477153,8 15,7.55228475 15,7 C15,6.44771525 15.4477153,6 16,6 L18,6 L18,4 C18,3.44771525 18.4477153,3 19,3 C19.5522847,3 20,3.44771525 20,4 L20,6 L22,6 C22.5522847,6 23,6.44771525 23,7 C23,7.55228475 22.5522847,8 22,8 L20,8 L20,10 C20,10.5522847 19.5522847,11 19,11 C18.4477153,11 18,10.5522847 18,10 L18,8 Z M9,11 C6.790861,11 5,9.209139 5,7 C5,4.790861 6.790861,3 9,3 C11.209139,3 13,4.790861 13,7 C13,9.209139 11.209139,11 9,11 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+							<path d="M0.00065168429,20.1992055 C0.388258525,15.4265159 4.26191235,13 8.98334134,13 C13.7712164,13 17.7048837,15.2931929 17.9979143,20.2 C18.0095879,20.3954741 17.9979143,21 17.2466999,21 C13.541124,21 8.03472472,21 0.727502227,21 C0.476712155,21 -0.0204617505,20.45918 0.00065168429,20.1992055 Z" fill="#000000" fill-rule="nonzero"/>
+						</g>
+					</svg>
+					<!--end::Svg Icon-->
+				</span>
+				Ajouter Membre
+			</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block content_body %}
+	<!--begin::Content-->
+	<div
+		class="content d-flex flex-column flex-column-fluid" id="kt_content">
+		<!--begin::Entry-->
+		<div
+			class="d-flex flex-column-fluid">
+			<!--begin::Container-->
+			<div
+				class="container">
+				<!--begin::Row-->
+				<div class="row">
+					<div
+						class="col-xl-12">
+						<!--begin::Tables Widget 5-->
+						<div
+							class="card card-custom card-stretch" id="kt_blockui_content">
+							<!--begin::Header-->
+							<div class="card-header border-0 pt-7">
+								<h3 class="card-title align-items-start flex-column">
+									<span class="card-label font-weight-bold font-size-h4 text-dark-75">Liste Utilisateurs</span>
+								</h3>
+							</div>
+							<!--end::Header-->
+							<!--begin::Body-->
+							<div class="card-body pt-0 pb-4">
+								<div
+									class="tab-content mt-2">
+									<!--begin::Tap pane-->
+									<div>
+										<!--begin::Table-->
+										<div class="table-responsive">
+											<table class="table table-borderless table-vertical-center">
+												<thead>
+													<tr>
+														<th class="p-0 w-50px"></th>
+														<th class="p-0 min-w-100px"></th>
+														<th class="p-0 min-w-100px"></th>
+														<th class="p-0 min-w-100px"></th>
+														<th class="p-0 min-w-110px"></th>
+														<th class="p-0 min-w-100px"></th>
+													</tr>
+												</thead>
+												<tbody>
+													{% if utilisateurs|length > 0 %}
+														{% for utilisateur in utilisateurs %}
+															<tr>
+																<td class="pl-0 py-5">
+																	<div class="symbol symbol-45 symbol-light mr-2">
+																		<span class="symbol-label font-size-h5">
+																			{{utilisateur.nom|slice(0, 1)|upper}}{{utilisateur.prenom|slice(0, 1)|upper}}
+																		</span>
+																	</div>
+																</td>
+																<td class="pl-0">
+																	<a href="#" class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">{{utilisateur.nom|capitalize}}
+																		{{utilisateur.prenom|capitalize}}</a>
+																</td>
+																<td class="text-left font-weight-bold">
+																	<span class="text-muted font-weight-500">{{utilisateur.email|capitalize}}</span>
+																</td>
+																<td class="text-left font-weight-bold">
+																	{% if utilisateur.tel %}
+																		<span class="text-muted font-weight-500">{{utilisateur.tel|capitalize}}</span>
+																	{% else %}
+																		<span class="text-muted font-weight-500">Aucun</span>
+																	{% endif %}
+
+																</td>
+																<td class="text-left">
+																	<div data-toggle="tooltip" title="Rôle" data-placement="top">
+																		{% if utilisateur.roles[0] == "ROLE_ADMINISTRATEUR" %}
+																			<span class="label label-lg label-light-info label-inline">Administrateur</span>
+																		{% elseif utilisateur.roles[0] == "ROLE_MODERATEUR" %}
+																			<span class="label label-lg label-light-warning label-inline">Modérateur</span>
+																		{% else %}
+																			<span class="label label-lg label-light-primary label-inline">Bénéficiaire</span>
+																		{% endif %}
+																	</div>
+																</td>
+																<td class="text-right pr-0">
+																	<div class="dropdown dropdown-inline" data-toggle="tooltip" title="Détails" data-placement="left">
+																		<a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3">
+																			<span
+																				class="svg-icon svg-icon-md svg-icon-primary">
+																				<!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/keen/releases/2020-10-07-041015/theme/demo6/dist/../src/media/svg/icons/Files/File.svg-->
+																				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewbox="0 0 24 24" version="1.1">
+																					<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+																						<polygon points="0 0 24 0 24 24 0 24"/>
+																						<path d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+																						<rect fill="#000000" x="6" y="11" width="9" height="2" rx="1"/>
+																						<rect fill="#000000" x="6" y="15" width="5" height="2" rx="1"/>
+																					</g>
+																				</svg>
+																				<!--end::Svg Icon-->
+																			</span>
+																		</a>
+																	</div>
+																	<div class="dropdown dropdown-inline" data-toggle="tooltip" title="Publications" data-placement="left">
+																		<a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm">
+																			<span
+																				class="svg-icon svg-icon-md svg-icon-primary">
+																				<!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/keen/releases/2020-10-07-041015/theme/demo6/dist/../src/media/svg/icons/Layout/Layout-left-panel-2.svg-->
+																				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewbox="0 0 24 24" version="1.1">
+																					<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+																						<rect x="0" y="0" width="24" height="24"/>
+																						<path d="M10,4 L21,4 C21.5522847,4 22,4.44771525 22,5 L22,7 C22,7.55228475 21.5522847,8 21,8 L10,8 C9.44771525,8 9,7.55228475 9,7 L9,5 C9,4.44771525 9.44771525,4 10,4 Z M10,10 L21,10 C21.5522847,10 22,10.4477153 22,11 L22,13 C22,13.5522847 21.5522847,14 21,14 L10,14 C9.44771525,14 9,13.5522847 9,13 L9,11 C9,10.4477153 9.44771525,10 10,10 Z M10,16 L21,16 C21.5522847,16 22,16.4477153 22,17 L22,19 C22,19.5522847 21.5522847,20 21,20 L10,20 C9.44771525,20 9,19.5522847 9,19 L9,17 C9,16.4477153 9.44771525,16 10,16 Z" fill="#000000"/>
+																						<rect fill="#000000" opacity="0.3" x="2" y="4" width="5" height="16" rx="1"/>
+																					</g>
+																				</svg>
+																				<!--end::Svg Icon-->
+																			</span>
+																		</a>
+																	</div>
+																</td>
+															</tr>
+														{% endfor %}
+													{% else %}
+														<div class="form-group">
+															<div class="alert alert-custom alert-default border" role="alert">
+																<div class="alert-text text-center">Aucun Utilisateur.</div>
+															</div>
+														</div>
+													{% endif %}
+												</tbody>
+											</table>
+										</div>
+										<!--end::Tablet-->
+									</div>
+									<!--end::Tap pane-->
+								</div>
+							</div>
+							<!--end::Body-->
+						</div>
+						<!--end::Tables Widget 5-->
+					</div>
+				</div>
+				<!--end::Row-->
+			</div>
+			<!--end::Container-->
+		</div>
+		<!--end::Entry-->
+	</div>
+	<!--end::Content-->
+{% endblock %}

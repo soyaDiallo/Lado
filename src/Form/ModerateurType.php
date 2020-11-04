@@ -11,8 +11,7 @@ class ModerateurType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-        ;
+        $builder;
     }
 
     public function configureOptions(OptionsResolver $resolver)

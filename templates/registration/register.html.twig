@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{# {% extends 'base.html.twig' %}
 
 {% block title %}Register{% endblock %}
 
@@ -21,4 +21,137 @@
         {{ form_row(registrationForm.roles) }}
         <button type="submit" class="btn">Register</button>
     {{ form_end(registrationForm) }}
+{% endblock %} #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}S'inscrire
+{% endblock %}
+
+{% block stylesheets %}
+	<link href="{{ asset('css/pages/login/login-2e8da.css?v=2.0.3') }}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+{% block javascripts %}
+	<script src="{{ asset('js/pages/custom/login/logine8da.js?v=2.0.3') }}"></script>
+{% endblock %}
+
+{% block body %}
+	<div
+		class="d-flex flex-column flex-root">
+		<!--begin::Login-->
+		<div
+			class="login login-2 login-signin-on d-flex flex-column flex-column-fluid bg-white position-relative overflow-hidden" id="kt_login">
+			<!--begin::Body-->
+
+			{% for message in app.flashes('verify_email_error') %}
+				<div class="container">
+					<div class="alert alert-custom alert-outline-2x alert-outline-danger fade show mb-7" role="alert">
+						<div class="alert-icon">
+							<span
+								class="svg-icon svg-icon-3x svg-icon-danger">
+								<!--begin::Svg Icon | path:/keen/theme/demo6/dist/assets/media/svg/icons/Code/Info-circle.svg-->
+								<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewbox="0 0 24 24" version="1.1">
+									<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+										<rect x="0" y="0" width="24" height="24"/>
+										<circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10"/>
+										<rect fill="#000000" x="11" y="10" width="2" height="7" rx="1"/>
+										<rect fill="#000000" x="11" y="7" width="2" height="2" rx="1"/>
+									</g>
+								</svg>
+								<!--end::Svg Icon-->
+							</span>
+						</div>
+						<div class="alert-text">{{ message }}</div>
+						<div class="alert-close">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">
+									<i class="ki ki-close"></i>
+								</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+
+			<div class="login-body d-flex flex-column-fluid align-items-stretch justify-content-center">
+				<div class="container row">
+					<div
+						class="col-lg-6 d-flex align-items-center">
+						<!--begin::Signin-->
+						<div
+							class="login-form login-signin">
+							<!--begin::Form-->
+
+							{{ form_start(registrationForm, {'attr': {'method': 'POST', 'class': 'form w-xxl-550px rounded-lg p-20'}}) }}
+
+							<!--begin::Title-->
+							<div class="pb-13 pt-lg-0 pt-5">
+								<h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">Inscrivez-vous</h3>
+							</div>
+							<!--begin::Title-->
+							<!--begin::Form group-->
+							<div class="form-group">
+								<label class="font-size-h6 font-weight-bolder text-dark">Nom</label>
+								{{ form_widget(registrationForm.nom, {'attr': {'class': 'form-control form-control-solid h-auto p-6 rounded-lg', 'placeholder': 'Nom Utilisateur', 'required': 'true', 'autofocus': 'true'}}) }}
+								{# <input class="form-control form-control-solid h-auto p-6 rounded-lg" type="email" name="email" id="inputEmail" value="{{ last_username }}" required autofocus/> #}
+							</div>
+							<!--end::Form group-->
+							<!--begin::Form group-->
+							<div class="form-group">
+								<label class="font-size-h6 font-weight-bolder text-dark">Prénom</label>
+								{{ form_widget(registrationForm.prenom, {'attr': {'class': 'form-control form-control-solid h-auto p-6 rounded-lg', 'placeholder': 'Prénom Utilisateur', 'required': 'true'}}) }}
+								{# <input class="form-control form-control-solid h-auto p-6 rounded-lg" type="email" name="email" id="inputEmail" value="{{ last_username }}" required autofocus/> #}
+							</div>
+							<!--end::Form group-->
+							<!--begin::Form group-->
+							<div class="form-group">
+								<label class="font-size-h6 font-weight-bolder text-dark">Email</label>
+								{{ form_widget(registrationForm.email, {'attr': {'class': 'form-control form-control-solid h-auto p-6 rounded-lg', 'placeholder': 'Email Utilisateur', 'required': 'true'}}) }}
+								{# <input class="form-control form-control-solid h-auto p-6 rounded-lg" type="email" name="email" id="inputEmail" value="{{ last_username }}" required autofocus/> #}
+							</div>
+							<!--end::Form group-->
+							<!--begin::Form group-->
+							<div class="form-group">
+								<label class="font-size-h6 font-weight-bolder text-dark">Mot de passe</label>
+								{{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control form-control-solid h-auto p-6 rounded-lg', 'placeholder': 'Mot de passe', 'required': 'true'}}) }}
+								{# <input class="form-control form-control-solid h-auto p-6 rounded-lg" type="password" name="password" id="inputPassword" required/> #}
+							</div>
+
+							<div class="form-group">
+								<label class="font-size-h6 font-weight-bolder text-dark">Confirmation Mot de passe</label>
+								{{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control form-control-solid h-auto p-6 rounded-lg', 'placeholder': 'Confirmation', 'required': 'true'}}) }}
+								{# <input class="form-control form-control-solid h-auto p-6 rounded-lg" type="password" name="password" id="inputPassword" required/> #}
+							</div>
+							<!--end::Form group-->
+
+							<!--begin::Action-->
+							<div class="pb-lg-0 pb-5">
+								<button type="submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">S'inscrire</button>
+							</div>
+							<!--end::Action-->
+
+							{{ form_end(registrationForm) }}
+
+							<!--end::Form-->
+						</div>
+						<!--end::Signin-->
+					</div>
+					<div class="col-lg-6 bgi-size-contain bgi-no-repeat bgi-position-y-center bgi-position-x-center min-h-150px mt-10 m-md-0" style="background-image: url({{ asset('media/accomplishment.svg') }})"></div>
+				</div>
+			</div>
+			<!--end::Body-->
+			<!--begin::Footer-->
+			<div class="login-footer py-10 flex-column-auto">
+				<div class="container d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-between">
+					<div class="font-size-h6 font-weight-bolder order-2 order-md-1 py-2 py-md-0">
+						<span class="text-muted font-weight-bold mr-2">2020©</span>
+						<a href="#" target="_blank" class="text-dark-50 text-hover-primary">Application</a>
+					</div>
+				</div>
+			</div>
+			<!--end::Footer-->
+		</div>
+		<!--end::Login-->
+	</div>
 {% endblock %}
