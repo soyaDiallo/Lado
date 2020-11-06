@@ -25,22 +25,22 @@ class Cheque
     private $num;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $statut;
+    private $dateRefusAdmin;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float",)
      */
     private $montant;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $contenu;
 
@@ -50,9 +50,14 @@ class Cheque
     private $dateDeclaration;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $datePublication;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateRefus;
 
     /**
      * @ORM\OneToMany(targetEntity=PiecesJointes::class, mappedBy="cheque")
@@ -63,6 +68,11 @@ class Cheque
      * @ORM\ManyToOne(targetEntity=Chequier::class, inversedBy="cheques")
      */
     private $chequier;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Beneficiaire::class, inversedBy="cheques")
+     */
+    private $beneficiaire;
 
     public function __construct()
     {
@@ -98,14 +108,14 @@ class Cheque
         return $this;
     }
 
-    public function getStatut(): ?string
+    public function getDateRefusAdmin(): ?string
     {
-        return $this->statut;
+        return $this->dateRefusAdmin;
     }
 
-    public function setStatut(string $statut): self
+    public function setDateRefusAdmin(string $dateRefusAdmin): self
     {
-        $this->statut = $statut;
+        $this->dateRefusAdmin = $dateRefusAdmin;
 
         return $this;
     }
@@ -158,6 +168,18 @@ class Cheque
         return $this;
     }
 
+    public function getDateRefus(): ?\DateTimeInterface
+    {
+        return $this->dateRefus;
+    }
+
+    public function setDateRefus(\DateTimeInterface $dateRefus): self
+    {
+        $this->dateRefus = $dateRefus;
+
+        return $this;
+    }
+
     /**
      * @return Collection|PiecesJointes[]
      */
@@ -196,6 +218,18 @@ class Cheque
     public function setChequier(?Chequier $chequier): self
     {
         $this->chequier = $chequier;
+
+        return $this;
+    }
+
+    public function getBeneficiaire(): ?Beneficiaire
+    {
+        return $this->beneficiaire;
+    }
+
+    public function setBeneficiaire(?Beneficiaire $beneficiaire): self
+    {
+        $this->beneficiaire = $beneficiaire;
 
         return $this;
     }

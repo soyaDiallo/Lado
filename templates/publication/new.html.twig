@@ -1,42 +1,62 @@
 {% extends 'content.html.twig' %}
 
-{% block title %}Nouvel Utilisateur
+{% block title %}Nouvelle Publication
 {% endblock %}
 
 {% block content_header %}
 	<ul class="menu-nav">
-		<li class="menu-item" aria-haspopup="true">
-			<a href="{{ path('administrateur_index') }}" class="menu-link">
-				<span class="menu-text">Accueil</span>
-			</a>
-		</li>
-		<li class="menu-item" aria-haspopup="true">
-			<a href="#" class="menu-link">
-				<span class="menu-text">Publications</span>
-			</a>
-		</li>
-		<li class="menu-item menu-item-active" aria-haspopup="true">
-			<a href="{{ path('user_index') }}" class="menu-link">
-				<span class="menu-text">Utilisateurs</span>
-			</a>
-		</li>
+
+		{% if is_granted('ROLE_BENEFICIAIRE') %}
+			<li class="menu-item" aria-haspopup="true">
+				<a href="{{ path('beneficiaire_index') }}" class="menu-link">
+					<span class="menu-text">Accueil</span>
+				</a>
+			</li>
+		{% elseif is_granted('ROLE_MODERATEUR') %}
+			<li class="menu-item" aria-haspopup="true">
+				<a href="{{ path('moderateur_index') }}" class="menu-link">
+					<span class="menu-text">Accueil</span>
+				</a>
+			</li>
+		{% elseif is_granted('ROLE_ADMINISTRATEUR') %}
+			<li class="menu-item" aria-haspopup="true">
+				<a href="{{ path('administrateur_index') }}" class="menu-link">
+					<span class="menu-text">Accueil</span>
+				</a>
+			</li>
+			<li class="menu-item" aria-haspopup="true">
+				<a href="{{ path('user_index') }}" class="menu-link">
+					<span class="menu-text">Utilisateurs</span>
+				</a>
+			</li>
+		{% endif %}
 	</ul>
 {% endblock %}
 
 {% block content_subheader %}
 	<!--begin::Page Title-->
-	<h5 class="text-dark font-weight-bold my-1 mr-5">Nouvel Utilisateur</h5>
+	<h5 class="text-dark font-weight-bold my-1 mr-5">Nouvelle Publication</h5>
 	<!--end::Page Title-->
 	<!--begin::Breadcrumb-->
 	<ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
 		<li class="breadcrumb-item text-muted">
 			<span class="text-muted">Application</span>
 		</li>
+		{% if is_granted('ROLE_BENEFICIAIRE') %}
+			<li class="breadcrumb-item text-muted">
+				<a href="{{ path('beneficiaire_index') }}" class="text-muted">Les publications</a>
+			</li>
+		{% elseif is_granted('ROLE_MODERATEUR') %}
+			<li class="breadcrumb-item text-muted">
+				<a href="{{ path('moderateur_index') }}" class="text-muted">Les publications</a>
+			</li>
+		{% elseif is_granted('ROLE_ADMINISTRATEUR') %}
+			<li class="breadcrumb-item text-muted">
+				<a href="{{ path('publication_index') }}" class="text-muted">Les publications</a>
+			</li>
+		{% endif %}
 		<li class="breadcrumb-item text-muted">
-			<a href="{{ path('user_index') }}" class="text-muted">Les utilisateurs</a>
-		</li>
-		<li class="breadcrumb-item text-muted">
-			<a href="#" class="text-muted">Nouvel utilisateur</a>
+			<a href="#" class="text-muted">Nouvelle Publication</a>
 		</li>
 	</ul>
 	<!--end::Breadcrumb-->
@@ -46,7 +66,8 @@
 	<div
 		class="content d-flex flex-column flex-column-fluid" id="kt_content">
 		<!--begin::Entry-->
-		<div class="d-flex flex-column-fluid">
+		<div
+			class="d-flex flex-column-fluid">
 			<!--begin::Container-->
 			<div class="container">
 				{{ form_start(form, {'attr': {'class': 'form'}}) }}
@@ -55,8 +76,8 @@
 					<!--begin::Header-->
 					<div class="card-header py-3">
 						<div class="card-title align-items-start flex-column">
-							<h3 class="card-label font-weight-bolder text-dark">Nouvel Utilisateur</h3>
-							<span class="text-muted font-weight-bold font-size-sm mt-1">Ajout d'un nouveau membre.</span>
+							<h3 class="card-label font-weight-bolder text-dark">Nouvelle Publication</h3>
+							<span class="text-muted font-weight-bold font-size-sm mt-1">Ajout d'une nouvelle publication.</span>
 						</div>
 					</div>
 					<!--end::Header-->
@@ -64,14 +85,24 @@
 					<!--begin::Body-->
 					<div class="card-body">
 						<div>
-							<h3 class="mb-10 font-weight-bold text-dark">Informations Personnelles</h3>
+							<h3 class="mb-10 font-weight-bold text-dark">Informations Banque</h3>
 							<div class="row">
 								<div
 									class="col-xl-6">
 									<!--begin::Input-->
 									<div class="form-group">
-										<label>Nom Utilisateur</label>
-										{{ form_widget(form.nom, {'attr': {'class': 'form-control form-control-solid form-control-lg', 'placeholder': 'Nom Utilisateur'}}) }}
+										<label>Agence</label>
+										<select class="form-control form-control-solid form-control-lg">
+											{% for row in banquesAgences %}
+												{% if row[1] %}
+													<optgroup label="{{row[0].nom}}">
+														{% for item in row[1] %}
+															<option value="{{item.id}}">{{item.nom}}</option>
+														{% endfor %}
+													</optgroup>
+												{% endif %}
+											{% endfor %}
+										</select>
 									</div>
 									<!--end::Input-->
 								</div>
@@ -79,45 +110,22 @@
 									class="col-xl-6">
 									<!--begin::Input-->
 									<div class="form-group">
-										<label>Prénom Utilisateur</label>
-										{{ form_widget(form.prenom, {'attr': {'class': 'form-control form-control-solid form-control-lg', 'placeholder': 'Prénom Utilisateur'}}) }}
-									</div>
-									<!--end::Input-->
-								</div>
-							</div>
-
-							<div class="row">
-								<div
-									class="col-xl-6">
-									<!--begin::Input-->
-									<div class="form-group">
-										<label>Adresse Utilisateur</label>
-										{{ form_widget(form.adresse, {'attr': {'class': 'form-control form-control-solid form-control-lg', 'placeholder': 'Adresse Utilisateur'}}) }}
-									</div>
-									<!--end::Input-->
-								</div>
-								<div
-									class="col-xl-6">
-									<!--begin::Input-->
-									<div class="form-group">
-										<label>Téléphone</label>
-										{{ form_widget(form.tel, {'attr': {'class': 'form-control form-control-solid form-control-lg', 'placeholder': 'Téléphone Utilisateur'}}) }}
+										<label>N° Compte</label>
+										<input class="form-control form-control-solid form-control-lg" placeholder="Numéro Compte"/>
 									</div>
 									<!--end::Input-->
 								</div>
 							</div>
 
 							<div class="separator separator-dashed my-5"></div>
-
-							<h3 class="mb-10 font-weight-bold text-dark">Informations Compte</h3>
+							<h3 class="mb-10 font-weight-bold text-dark">Informations Chèque</h3>
 							<div class="row">
 								<div
 									class="col-xl-6">
 									<!--begin::Input-->
 									<div class="form-group">
-										<label>Email Utilisateur</label>
-										{{ form_widget(form.email, {'attr': {'class': 'form-control form-control-solid form-control-lg', 'placeholder': 'Email Utilisateur'}}) }}
-										<span class="form-text text-muted">L'email doit être unique.</span>
+										<label>N° Série Chéquier</label>
+										{{ form_widget(form.chequier.numSerie, {'attr': {'class': 'form-control form-control-solid form-control-lg', 'placeholder': 'Numéro Série Chéquier'}}) }}
 									</div>
 									<!--end::Input-->
 								</div>
@@ -125,9 +133,30 @@
 									class="col-xl-6">
 									<!--begin::Input-->
 									<div class="form-group">
-										<label>Rôle Utilisateur</label>
-										{{ form_widget(form.roles, {'attr': {'class': 'form-control form-control-solid form-control-lg', 'placeholder': 'Rôle Utilisateur'}}) }}
-										<span class="form-text text-muted">Il s'agit du rôle de l'utilisateur dans la plateforme.</span>
+										<label>Date Remise Chéquier</label>
+										{{ form_widget(form.chequier.dateRemise, {'attr': {'class': 'form-control form-control-solid form-control-lg', 'placeholder': 'Date Remise'}}) }}
+									</div>
+									<!--end::Input-->
+								</div>
+							</div>
+
+							<div class="separator separator-dashed my-5 mx-15"></div>
+							<div class="row">
+								<div
+									class="col-xl-6">
+									<!--begin::Input-->
+									<div class="form-group">
+										<label>N° Chèque</label>
+										{{ form_widget(form.num, {'attr': {'class': 'form-control form-control-solid form-control-lg', 'placeholder': 'Numéro Chèque'}}) }}
+									</div>
+									<!--end::Input-->
+								</div>
+								<div
+									class="col-xl-6">
+									<!--begin::Input-->
+									<div class="form-group">
+										<label>Montant</label>
+										{{ form_widget(form.montant, {'attr': {'class': 'form-control form-control-solid form-control-lg', 'placeholder': 'Date Remise'}}) }}
 									</div>
 									<!--end::Input-->
 								</div>
@@ -138,28 +167,36 @@
 									class="col-xl-6">
 									<!--begin::Input-->
 									<div class="form-group">
-										<label>Mot de passe</label>
-										{{ form_widget(form.plainPassword.first, {'attr': {'class': 'form-control form-control-solid form-control-lg', 'placeholder': 'Mot de passe Utilisateur', 'value': '12345678'}}) }}
-										<span class="form-text text-muted">Le mot de passe par defaut est
-											<strong>12345678</strong>.
-										</span>
+										<label>Contenu</label>
+										{{ form_widget(form.contenu, {'attr': {'class': 'form-control form-control-solid form-control-lg', 'placeholder': 'Numéro Chèque'}}) }}
 									</div>
 									<!--end::Input-->
 								</div>
 								<div
 									class="col-xl-6">
+									<div class="form-group">
+										<label>Pièces Jointes</label>
+										<div class="custom-file form-control form-control-solid form-control-lg">
+											<input type="file" name="myfile[]" class="custom-file-input form-control form-control-solid form-control-lg" id="myfile" required multiple>
+											<label class="custom-file-label" for="myfile">Ajouter des pièces jointes</label>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div
+									class="col-xl-12">
 									<!--begin::Input-->
 									<div class="form-group">
-										<label>Confirmation Mot de passe</label>
-										{{ form_widget(form.plainPassword.second, {'attr': {'class': 'form-control form-control-solid form-control-lg', 'placeholder': 'Confirmation Mot de passe', 'value': '12345678'}}) }}
-										<span class="form-text text-muted">Le mot de passe de confirmation doit être identique au mot de passe.</span>
+										<label>Description</label>
+										{{ form_widget(form.description, {'attr': {'class': 'form-control form-control-solid form-control-lg', 'placeholder': 'Numéro Chèque'}}) }}
 									</div>
 									<!--end::Input-->
 								</div>
 							</div>
 						</div>
 					</div>
-					<!--end::Body-->
 
 					<!--begin::Footer-->
 					<div class="card-footer py-5 px-5">
@@ -167,9 +204,19 @@
 							<button type="submit" class="btn btn-primary font-weight-bolder px-5 mr-3">
 								Enregistrer
 							</button>
-							<a href="{{ path('user_index') }}" class="btn btn-light-primary font-weight-bold px-5 mr-3">
-								Annuler
-							</a>
+							{% if is_granted('ROLE_BENEFICIAIRE') %}
+								<a href="{{ path('beneficiaire_index') }}" class="btn btn-light-primary font-weight-bold px-5 mr-3">
+									Annuler
+								</a>
+							{% elseif is_granted('ROLE_MODERATEUR') %}
+								<a href="{{ path('moderateur_index') }}" class="btn btn-light-primary font-weight-bold px-5 mr-3">
+									Annuler
+								</a>
+							{% elseif is_granted('ROLE_ADMINISTRATEUR') %}
+								<a href="{{ path('administrateur_index') }}" class="btn btn-light-primary font-weight-bold px-5 mr-3">
+									Annuler
+								</a>
+							{% endif %}
 						</div>
 					</div>
 					<!--end::Footer-->

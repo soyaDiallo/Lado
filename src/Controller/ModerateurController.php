@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Moderateur;
 use App\Form\ModerateurType;
+use App\Repository\ChequeRepository;
 use App\Repository\ModerateurRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,77 +22,37 @@ class ModerateurController extends AbstractController
     /**
      * @Route("/", name="moderateur_index", methods={"GET"})
      */
-    public function index(ModerateurRepository $moderateurRepository): Response
-    {
+    public function index(
+        ChequeRepository $chequeRepository
+    ): Response {
+        if ($this->getUser()->getRoles()[0] == "ROLE_MODERATEUR")
+            return $this->render('moderateur/index.html.twig', [
+                'cheques' => $chequeRepository->findBy(['dateRefus' => null], ['dateDeclaration' => "DESC"]),
+                'active' => "no-valid"
+            ]);
+    }
+
+    /**
+     * @Route("/valide", name="moderateur_index_valid", methods={"GET"})
+     */
+    public function index_valid(
+        ChequeRepository $chequeRepository
+    ): Response {
         return $this->render('moderateur/index.html.twig', [
-            'moderateurs' => $moderateurRepository->findAll(),
+            'cheques' => $chequeRepository->createQueryBuilder('c')->where('c.datePublication IS NOT NULL')->getQuery()->getResult(),
+            'active' => "valid"
         ]);
     }
 
     /**
-     * @Route("/new", name="moderateur_new", methods={"GET","POST"})
+     * @Route("/refuse", name="moderateur_index_refus", methods={"GET"})
      */
-    public function new(Request $request): Response
-    {
-        $moderateur = new Moderateur();
-        $form = $this->createForm(ModerateurType::class, $moderateur);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($moderateur);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('moderateur_index');
-        }
-
-        return $this->render('moderateur/new.html.twig', [
-            'moderateur' => $moderateur,
-            'form' => $form->createView(),
+    public function index_refus(
+        ChequeRepository $chequeRepository
+    ): Response {
+        return $this->render('moderateur/index.html.twig', [
+            'cheques' => $chequeRepository->createQueryBuilder('c')->where('c.dateRefus IS NOT NULL')->getQuery()->getResult(),
+            'active' => "refus"
         ]);
-    }
-
-    /**
-     * @Route("/{id}", name="moderateur_show", methods={"GET"})
-     */
-    public function show(Moderateur $moderateur): Response
-    {
-        return $this->render('moderateur/show.html.twig', [
-            'moderateur' => $moderateur,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/edit", name="moderateur_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, Moderateur $moderateur): Response
-    {
-        $form = $this->createForm(ModerateurType::class, $moderateur);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('moderateur_index');
-        }
-
-        return $this->render('moderateur/edit.html.twig', [
-            'moderateur' => $moderateur,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="moderateur_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Moderateur $moderateur): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$moderateur->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($moderateur);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('moderateur_index');
     }
 }
