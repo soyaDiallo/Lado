@@ -70,7 +70,7 @@
 			class="d-flex flex-column-fluid">
 			<!--begin::Container-->
 			<div class="container">
-				{{ form_start(form, {'attr': {'class': 'form'}}) }}
+				{{ form_start(form,{'multipart':true}, {'attr': {'class': 'form'}}) }}
 				<div
 					class="card card-custom">
 					<!--begin::Header-->
@@ -92,12 +92,12 @@
 									<!--begin::Input-->
 									<div class="form-group">
 										<label>Agence</label>
-										<select class="form-control form-control-solid form-control-lg">
+										<select name="agence" class="form-control form-control-solid form-control-lg">
 											{% for row in banquesAgences %}
 												{% if row[1] %}
 													<optgroup label="{{row[0].nom}}">
 														{% for item in row[1] %}
-															<option value="{{item.id}}">{{item.nom}}</option>
+															<option  value="{{item.id}}">{{item.nom}}</option>
 														{% endfor %}
 													</optgroup>
 												{% endif %}
@@ -111,7 +111,7 @@
 									<!--begin::Input-->
 									<div class="form-group">
 										<label>N° Compte</label>
-										<input class="form-control form-control-solid form-control-lg" placeholder="Numéro Compte"/>
+										<input name="numeroCompte" class="form-control form-control-solid form-control-lg" placeholder="Numéro Compte"/>
 									</div>
 									<!--end::Input-->
 								</div>
@@ -172,8 +172,7 @@
 									</div>
 									<!--end::Input-->
 								</div>
-								<div
-									class="col-xl-6">
+								<div class="col-xl-6">
 									<div class="form-group">
 										<label>Pièces Jointes</label>
 										<div class="custom-file form-control form-control-solid form-control-lg">

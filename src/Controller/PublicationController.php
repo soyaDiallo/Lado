@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\CompteBancaire;
 use App\Entity\Beneficiaire;
 use App\Entity\Cheque;
+use App\Entity\PiecesJointes;
+use App\Entity\Chequier;
 use App\Form\BeneficiaireType;
 use App\Form\ChequeType;
 use App\Repository\AgenceRepository;
@@ -20,6 +23,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 /**
  * @Route("/publication")
@@ -34,7 +39,7 @@ class PublicationController extends AbstractController
         Request $request,
         BanqueRepository $banqueRepository,
         AgenceRepository $agenceRepository,
-
+        SluggerInterface $slugger,
         CompteBancaireRepository $compteBancaireRepository,
         ChequierRepository $chequierRepository,
         ChequeRepository $chequeRepository
@@ -50,14 +55,57 @@ class PublicationController extends AbstractController
             $banquesAgences[$key][0] = $value;
             $banquesAgences[$key][1] = $agenceRepository->findBy(['banque' => $value]);
         }
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            //dd($request->files->get('myfile'));
 
-        // if ($form->isSubmitted() && $form->isValid()) {
-        //     $entityManager = $this->getDoctrine()->getManager();
-        //     $entityManager->persist($beneficiaire);
-        //     $entityManager->flush();
+            $compte= new CompteBancaire();
+            $agence=$agenceRepository->find($request->request->get('agence'));
+            $compte->setAgence($agence);
+            $compte->setNumCompte($request->request->get('numeroCompte'));
+            $entityManager->persist($compte);
+            $entityManager->flush();
 
-        //     return $this->redirectToRoute('beneficiaire_index');
-        // }
+            $chequier= new Chequier();
+            $chequier->setCompteBancaire($compte);
+            $chequier->setNumSerie($request->request->get('cheque')['chequier']['numSerie']);
+            $chequier->setDateRemise($form->get('chequier')->getData()->getDateRemise());
+            $entityManager->persist($chequier);
+            $entityManager->flush();
+
+            $cheque->setDateDeclaration(new \DateTime());
+            $cheque->setChequier($chequier);
+            $cheque->setBeneficiaire($this->getUser());
+            $entityManager->persist($cheque);
+            $entityManager->flush();
+
+            $pieces = $request->files->get('myfile');
+            $mesPieces = [];
+            foreach ($pieces as $key => $piece) {
+                $mesPieces[$key] = new PiecesJointes();
+                if ($piece) {
+                    $originalFilename = pathinfo($piece->getClientOriginalName(), PATHINFO_FILENAME);
+    
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $piece->guessExtension();
+                    try {
+                        $piece->move(
+                            $this->getParameter('pieces_directory'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                    }
+                    $mesPieces[$key]->setNomFichier("Fichier-" . $key . "-" . $this->getUser()->getNom());
+                    $mesPieces[$key]->setUrlFichier($newFilename);
+                    $mesPieces[$key]->setCheque($cheque);
+                }
+                $entityManager->persist($mesPieces[$key]);
+                $entityManager->flush();
+            }
+            
+            return $this->redirectToRoute('beneficiaire_index');
+        }
 
         return $this->render('publication/new.html.twig', [
             'banquesAgences' => $banquesAgences,
@@ -68,21 +116,39 @@ class PublicationController extends AbstractController
     /**
      * @Route("/valide/{id}", name="publication_valid", methods={"GET","POST"})
      */
-    public function launch_publication(int $id = 0)
+    public function launch_publication(ChequeRepository $chequeRepository,int $id = 0)
     {
+        $cheque = $chequeRepository->find($id);
+        $cheque->setDatePublication(new \DateTime());
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($cheque);
+        $entityManager->flush();
+        return $this->redirectToRoute('moderateur_index');
     }
 
     /**
      * @Route("/refuse/{id}", name="publication_refuse", methods={"GET","POST"})
      */
-    public function refuse_publication(int $id = 0)
+    public function refuse_publication(ChequeRepository $chequeRepository,int $id = 0)
     {
+        $cheque = $chequeRepository->find($id);
+        $cheque->setDateRefus(new \DateTime());
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($cheque);
+        $entityManager->flush();
+        return $this->redirectToRoute('moderateur_index');
     }
-
+    
     /**
      * @Route("/refuse/admin/{id}", name="publication_admin_refuse", methods={"GET","POST"})
      */
-    public function refuse_admin_publication(int $id = 0)
+    public function refuse_admin_publication(ChequeRepository $chequeRepository,int $id = 0)
     {
+        $cheque = $chequeRepository->find($id);
+        $cheque->setDateRefusAdmin(new \DateTime());
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($cheque);
+        $entityManager->flush();
+        return $this->redirectToRoute('moderateur_index');
     }
 }

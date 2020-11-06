@@ -113,7 +113,7 @@ class Cheque
         return $this->dateRefusAdmin;
     }
 
-    public function setDateRefusAdmin(string $dateRefusAdmin): self
+    public function setDateRefusAdmin(\DateTimeInterface $dateRefusAdmin): self
     {
         $this->dateRefusAdmin = $dateRefusAdmin;
 
