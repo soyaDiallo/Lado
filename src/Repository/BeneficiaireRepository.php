@@ -19,6 +19,18 @@ class BeneficiaireRepository extends ServiceEntityRepository
         parent::__construct($registry, Beneficiaire::class);
     }
 
+    public function findByNum($value)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.num = :val')
+            ->setParameter('val', $value)
+            ->orderBy('c.dateDeclaration', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return Beneficiaire[] Returns an array of Beneficiaire objects
     //  */
