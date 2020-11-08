@@ -27,7 +27,7 @@ class ModerateurController extends AbstractController
     ): Response {
         if ($this->getUser()->getRoles()[0] == "ROLE_MODERATEUR")
             return $this->render('moderateur/index.html.twig', [
-                'cheques' => $chequeRepository->findBy(['dateRefus' => null], ['dateDeclaration' => "DESC"]),
+                'cheques' => $chequeRepository->findBy(['dateRefus' => null, 'dateRefusAdmin' => null, 'datePublication' => null], ['dateDeclaration' => "DESC"]),
                 'active' => "no-valid"
             ]);
     }
@@ -39,7 +39,7 @@ class ModerateurController extends AbstractController
         ChequeRepository $chequeRepository
     ): Response {
         return $this->render('moderateur/index.html.twig', [
-            'cheques' => $chequeRepository->createQueryBuilder('c')->where('c.datePublication IS NOT NULL')->getQuery()->getResult(),
+            'cheques' => $chequeRepository->createQueryBuilder('c')->where('c.datePublication IS NOT NULL')->andWhere('c.dateRefusAdmin IS NULL')->getQuery()->getResult(),
             'active' => "valid"
         ]);
     }
@@ -51,7 +51,7 @@ class ModerateurController extends AbstractController
         ChequeRepository $chequeRepository
     ): Response {
         return $this->render('moderateur/index.html.twig', [
-            'cheques' => $chequeRepository->createQueryBuilder('c')->where('c.dateRefus IS NOT NULL')->getQuery()->getResult(),
+            'cheques' => $chequeRepository->createQueryBuilder('c')->where('c.dateRefus IS NOT NULL')->orWhere('c.dateRefusAdmin IS NOT NULL')->getQuery()->getResult(),
             'active' => "refus"
         ]);
     }

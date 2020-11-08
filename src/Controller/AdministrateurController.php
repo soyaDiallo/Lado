@@ -23,7 +23,7 @@ class AdministrateurController extends AbstractController
         ChequeRepository $chequeRepository
     ): Response {
         return $this->render('administrateur/index.html.twig', [
-            'cheques' => $chequeRepository->findBy(['dateRefus' => null], ['dateDeclaration' => "DESC"]),
+            'cheques' => $chequeRepository->findBy(['dateRefus' => null, 'dateRefusAdmin' => null, 'datePublication' => null], ['dateDeclaration' => "DESC"]),
             'active' => "no-valid"
         ]);
     }
@@ -35,7 +35,7 @@ class AdministrateurController extends AbstractController
         ChequeRepository $chequeRepository
     ): Response {
         return $this->render('administrateur/index.html.twig', [
-            'cheques' => $chequeRepository->createQueryBuilder('c')->where('c.datePublication IS NOT NULL')->getQuery()->getResult(),
+            'cheques' => $chequeRepository->createQueryBuilder('c')->where('c.datePublication IS NOT NULL')->andWhere('c.dateRefusAdmin IS NULL')->getQuery()->getResult(),
             'active' => "valid"
         ]);
     }

@@ -108,7 +108,7 @@ class Cheque
         return $this;
     }
 
-    public function getDateRefusAdmin(): ?string
+    public function getDateRefusAdmin(): ?\DateTimeInterface
     {
         return $this->dateRefusAdmin;
     }

@@ -43,14 +43,12 @@
 {% endblock %}
 
 {% block content_body %}
-
 	<!--begin::Content-->
 	<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
 		<div class="d-flex flex-column-fluid">
 			<div class="container">
 				<form enctype='multipart/form-data' method="POST" action="{{ path('recherche') }}" class="form">
 					<div class="row">
-
 						<div class="p-1 col-md-12 ">
 							<div
 								class="card card-custom m-1">
@@ -59,7 +57,7 @@
 									class="card-body">
 									<!--begin::Message-->
 									{% for message in app.flashes('error_beneficiaire') %}
-										<div class="alert alert-custom alert-outline-2x alert-outline-danger fade show mb-7" role="alert">
+										<div class="alert alert-custom alert-outline-2x alert-light-info fade show mb-7" role="alert">
 											<div class="alert-icon">
 												<i class="flaticon-warning"></i>
 											</div>
@@ -114,15 +112,18 @@
 												</span>
 											</div>
 											<div class="d-flex flex-column">
-												<a href="#" class="text-dark text-hover-primary font-weight-bold font-size-h4 mb-3">
-													<u>{{cheque.num}}</u>
-													<span class="font-size-h5">({{cheque.chequier.numSerie}})</span>
+												<a href="{{ path('publication_show', {'id': cheque[0].id}) }}" class="text-dark text-hover-primary font-weight-bold font-size-h6 mb-3">
+													{% if cheque[1] %}
+														<span class="font-size-h6 font-weight-bolder text-primary">[Trouver]</span>
+													{% endif %}
+													<u>{{cheque[0].num}}</u>
+													<span class="font-size-h6 font-weight-bold">({{cheque[0].chequier.numSerie}})</span>
 												</a>
 												<div class="text-dark-75">
-													<span class="font-weight-boldest">{{cheque.beneficiaire.nom}}
-														{{cheque.beneficiaire.prenom}}</span>
+													<span class="font-weight-boldest">{{cheque[0].beneficiaire.nom}}
+														{{cheque[0].beneficiaire.prenom}}</span>
 													-
-													{{cheque.description}}
+													{{cheque[0].description}}
 												</div>
 											</div>
 										</div>
