@@ -7,6 +7,7 @@ use App\Entity\Beneficiaire;
 use App\Entity\Cheque;
 use App\Entity\PiecesJointes;
 use App\Entity\Chequier;
+use App\Entity\DeclarationTrouve;
 use App\Form\BeneficiaireType;
 use App\Form\ChequeType;
 use App\Repository\AgenceRepository;
@@ -187,5 +188,27 @@ class PublicationController extends AbstractController
             return $this->redirectToRoute('administrateur_index');
 
         return $this->redirectToRoute('moderateur_index');
+    }
+
+    /**
+     * @Route("/trouve/{id}", name="publication_find", methods={"POST"})
+     */
+    public function marque_trouver_publication(
+        ChequeRepository $chequeRepository, 
+        int $id = 0,
+        Request $request
+        )
+    {
+        $declarationTrouve = new DeclarationTrouve();
+        $declarationTrouve->setMotif($request->request->get('motif'));
+        $declarationTrouve->setDateRetour(new \DateTime());
+        $declarationTrouve->setCheque($chequeRepository->find($id));
+        $declarationTrouve->setBeneficiaire($this->getUser());
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($declarationTrouve);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('beneficiaire_index');
     }
 }

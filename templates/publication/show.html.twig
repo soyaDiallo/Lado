@@ -72,7 +72,7 @@
 			</div>
 
 			<div class="modal fade" id="sendToSuperviseurModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
-				<form method="POST" action="#" class="form">
+				<form method="POST" action="{{ path('publication_find', {'id': cheque.id}) }}" class="form">
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
@@ -88,14 +88,13 @@
 											<i class="flaticon-warning text-primary"></i>
 										</div>
 										<div class="alert-text">
-											<strong>Attention</strong>: Le format du fichier doit correspondre à celui d'un fichier audio (.wav, .mp3).</div>
+											<strong>Attention</strong>: Message.</div>
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label>Motif Déclaration</label>
-									<textarea class="form-control form-control-solid form-control-lg" name="motif" rows="3" placeholder="Description Motif"></textarea>
-									<span class="form-text text-muted">Veuillez choisir le fichier audio à associer à l'envoi.</span>
+									<textarea required class="form-control form-control-solid form-control-lg" name="motif" rows="3" placeholder="Description Motif"></textarea>
 								</div>
 							</div>
 							<div class="modal-footer">

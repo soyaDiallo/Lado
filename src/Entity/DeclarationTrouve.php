@@ -32,6 +32,11 @@ class DeclarationTrouve
      */
     private $cheque;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Beneficiaire::class, inversedBy="declarationTrouves")
+     */
+    private $beneficiaire;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +74,18 @@ class DeclarationTrouve
     public function setCheque(?Cheque $cheque): self
     {
         $this->cheque = $cheque;
+
+        return $this;
+    }
+
+    public function getBeneficiaire(): ?Beneficiaire
+    {
+        return $this->beneficiaire;
+    }
+
+    public function setBeneficiaire(?Beneficiaire $beneficiaire): self
+    {
+        $this->beneficiaire = $beneficiaire;
 
         return $this;
     }
